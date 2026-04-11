@@ -119,4 +119,147 @@ A **Calculadora** resolve essas dores oferecendo:
     "eslint": "^8.57.0"
   }
 }
+```
+---
+## Instalação
 
+### Pré-requisitos
+
+- Navegador web moderno (Chrome, Firefox, Edge, Safari)
+- Opcional: Git (para clonar)
+- Opcional: Node.js (para lint)
+
+### Passo a passo
+
+#### Opção 1 - Baixar ZIP
+1. Acesse o repositório no GitHub
+2. Clique em "Code" → "Download ZIP"
+3. Extraia e abra o `index.html`
+
+#### Opção 2 - Clonar com Git
+```bash
+git clone https://github.com/Beatriz-Dezotti/financiamento_calculadora.git
+cd financiamento_calculadora
+```
+---
+## Execução
+
+### Método 1 - Abrir diretamente no navegador (recomendado)
+
+1. Navegue até a pasta do projeto
+2. Dê dois cliques no arquivo `index.html`
+3. O navegador abrirá automaticamente com a calculadora
+
+### Método 2 - Live Server (VS Code)
+
+1. Instale a extensão **"Live Server"** no VS Code
+2. Abra a pasta do projeto no VS Code
+3. Clique com botão direito no `index.html`
+4. Escolha **"Open with Live Server"**
+
+---
+## Testes
+
+### Como executar os testes
+
+1. Abra o arquivo `tests.html` no navegador
+2. Clique no botão **"Executar Testes"**
+3. O resultado de cada teste será exibido na tela
+
+### O que os testes verificam
+
+| Teste | O que verifica |
+|-------|----------------|
+| SAC | Primeira parcela para financiamento de R$ 240.000 |
+| Price | Parcela fixa para financiamento de R$ 240.000 |
+| Percentual da renda | Cálculo correto da porcentagem |
+| Alertas | Cores corretas (verde/amarelo/vermelho) |
+
+### Resultado esperado
+✅ PASS: Função calcularPrimeiraParcelaSAC existe
+
+✅ PASS: Função calcularParcelaPrice existe
+
+✅ PASS: Função calcularPercentualRenda existe
+
+✅ PASS: Função gerarAlertaOrcamento existe
+
+✅ PASS: SAC - primeira parcela deve ser R$ 2.586,67
+
+✅ PASS: Price - parcela deve ser R$ 2.035,58
+
+✅ PASS: Percentual renda - deve ser 34%
+
+✅ PASS: Alerta verde - deve conter ✅
+
+✅ PASS: Alerta amarelo - deve conter ⚠️
+
+✅ PASS: Alerta vermelho - deve conter 🔴
+
+✅ PASS: SAC - valor da parcela deve ser positivo
+
+📊 Resultado: 11/11 testes passaram (100%)
+
+---
+## Linting (Análise Estática)
+
+### O que é linting?
+
+Linting é o processo de verificar o código em busca de problemas de estilo, inconsistências e alguns tipos de erro antes mesmo da execução.
+
+### Executando o linter localmente
+
+#### Pré-requisito: Node.js instalado
+
+1. Instale o Node.js em: `https://nodejs.org/`
+
+#### Passos para executar o ESLint
+
+```bash
+# Instalar dependências (primeira vez apenas)
+npm install
+
+# Executar o linter
+npm run lint
+
+# Ou diretamente com npx
+npx eslint script.js
+```
+---
+---
+
+## Seção de Versionamento 
+
+```markdown
+## Versionamento
+
+O projeto segue o **Versionamento Semântico (SemVer)** no formato `vMAJOR.MINOR.PATCH`.
+
+| Versão | Data | Alterações |
+|--------|------|------------|
+| **v1.0.0** | 11/04/2026 | Lançamento inicial: todas as funcionalidades básicas implementadas, testes, linting e CI configurados. |
+
+### Tags no Git
+
+```bash
+git tag v1.0.0
+git push origin --tags
+```
+---
+## Seção do Autor 
+
+**Beatriz Dezotti de Souza**
+
+- GitHub: [@Beatriz-Dezotti](https://github.com/Beatriz-Dezotti)
+- Email: [biabiadezotti@gmail.com]
+- Projeto desenvolvido para: [BootCamp II]
+- Instituição: [UniCEUB]
+
+--- 
+## Licença
+
+Este projeto está sob a licença MIT.
+
+---
+
+**Desenvolvido com ❤️ para ajudar famílias a realizarem o sonho da casa própria com planejamento e transparência.**
