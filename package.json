@@ -1,0 +1,21 @@
+{
+  "name": "financiamento-calculadora",
+  "version": "1.0.0",
+  "description": "Calculadora de financiamento imobiliário com planejamento familiar",
+  "main": "index.html",
+  "scripts": {
+    "test": "echo \"Abra o arquivo tests.html no navegador para executar os testes\"",
+    "lint": "npx eslint script.js"
+  },
+  "keywords": [
+    "financiamento",
+    "calculadora",
+    "imobiliario",
+    "planejamento-familiar"
+  ],
+  "author": "Seu Nome",
+  "license": "MIT",
+  "devDependencies": {
+    "eslint": "^8.57.0"
+  }
+}

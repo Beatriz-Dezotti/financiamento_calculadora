@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Testes - Calculadora de Financiamento</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        h1 {
+            color: #333;
+            border-bottom: 2px solid #667eea;
+            padding-bottom: 10px;
+        }
+        .test {
+            margin: 10px 0;
+            padding: 12px;
+            background: white;
+            border-radius: 8px;
+            border-left: 4px solid #ccc;
+        }
+        .pass {
+            border-left-color: #28a745;
+            background: #d4edda;
+        }
+        .fail {
+            border-left-color: #dc3545;
+            background: #f8d7da;
+        }
+        .pass-text {
+            color: #155724;
+            font-weight: bold;
+        }
+        .fail-text {
+            color: #721c24;
+            font-weight: bold;
+        }
+        .resumo {
+            margin-top: 20px;
+            padding: 15px;
+            background: #333;
+            color: white;
+            border-radius: 8px;
+            text-align: center;
+            font-size: 18px;
+        }
+        .sucesso {
+            background: #28a745;
+        }
+        .erro {
+            background: #dc3545;
+        }
+        button {
+            margin: 20px 0;
+            padding: 10px 20px;
+            background: #667eea;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        button:hover {
+            background: #5a67d8;
+        }
+    </style>
+</head>
+<body>
+    <h1>🧪 Testes Automatizados</h1>
+    <p>Calculadora de Financiamento Imobiliário</p>
+    
+    <button onclick="executarTestes()">▶ Executar Testes</button>
+    
+    <div id="resultados"></div>
+
+    <script src="script.js"></script>
+    <script>
+        let totalTestes = 0;
+        let testesPassaram = 0;
+        const resultadosDiv = document.getElementById('resultados');
+        
+        function assert(condicao, nomeTeste, detalhes = '') {
+            totalTestes++;
+            const div = document.createElement('div');
+            div.className = 'test';
+            
+            if (condicao) {
+                testesPassaram++;
+                div.classList.add('pass');
+                div.innerHTML = `<span class="pass-text">✅ PASS:</span> ${nomeTeste}`;
+            } else {
+                div.classList.add('fail');
+                div.innerHTML = `<span class="fail-text">❌ FAIL:</span> ${nomeTeste}`;
+                if (detalhes) {
+                    div.innerHTML += `<br><small style="color:#666;">${detalhes}</small>`;
+                }
+            }
+            
+            resultadosDiv.appendChild(div);
+        }
+        
+        function executarTestes() {
+            // Limpar resultados anteriores
+            resultadosDiv.innerHTML = '';
+            totalTestes = 0;
+            testesPassaram = 0;
+            
+            // Verificar se as funções existem
+            const funcoes = [
+                'calcularPrimeiraParcelaSAC',
+                'calcularParcelaPrice',
+                'calcularPercentualRenda',
+                'gerarAlertaOrcamento'
+            ];
+            
+            for (const fn of funcoes) {
+                assert(typeof window[fn] === 'function', `Função ${fn} existe`, `Verifique se a função ${fn} está definida no script.js`);
+            }
+            
+            // Teste 1: SAC
+            if (typeof calcularPrimeiraParcelaSAC === 'function') {
+                const sac = calcularPrimeiraParcelaSAC(240000, 0.008, 360);
+                assert(Math.abs(sac - 2586.6666666666665) < 0.01, 'SAC - primeira parcela deve ser R$ 2.586,67', `Obtido: R$ ${sac.toFixed(2)}`);
+            }
+            
+            // Teste 2: Price
+            if (typeof calcularParcelaPrice === 'function') {
+                const price = calcularParcelaPrice(240000, 0.008, 360);
+                assert(Math.abs(price - 2035.582777666447) < 0.01, 'Price - parcela deve ser R$ 2.035,58', `Obtido: R$ ${price.toFixed(2)}`);
+            }
+            
+            // Teste 3: Percentual da renda
+            if (typeof calcularPercentualRenda === 'function') {
+                const perc = calcularPercentualRenda(2720, 8000);
+                assert(Math.abs(perc - 34.0) < 0.01, 'Percentual renda - deve ser 34%', `Obtido: ${perc.toFixed(1)}%`);
+            }
+            
+            // Teste 4: Alerta verde (≤30%)
+            if (typeof gerarAlertaOrcamento === 'function') {
+                const alertaVerde = gerarAlertaOrcamento(25);
+                assert(alertaVerde.includes('✅'), 'Alerta verde - deve conter ✅', `Não encontrou ✅ em: ${alertaVerde.substring(0, 50)}`);
+            }
+            
+            // Teste 5: Alerta amarelo (31-40%)
+            if (typeof gerarAlertaOrcamento === 'function') {
+                const alertaAmarelo = gerarAlertaOrcamento(35);
+                assert(alertaAmarelo.includes('⚠️'), 'Alerta amarelo - deve conter ⚠️', `Não encontrou ⚠️ em: ${alertaAmarelo.substring(0, 50)}`);
+            }
+            
+            // Teste 6: Alerta vermelho (>40%)
+            if (typeof gerarAlertaOrcamento === 'function') {
+                const alertaVermelho = gerarAlertaOrcamento(45);
+                assert(alertaVermelho.includes('🔴'), 'Alerta vermelho - deve conter 🔴', `Não encontrou 🔴 em: ${alertaVermelho.substring(0, 50)}`);
+            }
+            
+            // Teste 7: Valor financiado não pode ser negativo
+            if (typeof calcularPrimeiraParcelaSAC === 'function') {
+                const sacNegativo = calcularPrimeiraParcelaSAC(100000, 0.008, 360);
+                assert(sacNegativo > 0, 'SAC - valor da parcela deve ser positivo', `Obtido: R$ ${sacNegativo.toFixed(2)}`);
+            }
+            
+            // Exibir resumo
+            const resumo = document.createElement('div');
+            const percentual = (testesPassaram / totalTestes) * 100;
+            resumo.className = `resumo ${percentual === 100 ? 'sucesso' : 'erro'}`;
+            resumo.innerHTML = `📊 Resultado: ${testesPassaram}/${totalTestes} testes passaram (${percentual.toFixed(0)}%)`;
+            resultadosDiv.appendChild(resumo);
+        }
+        
+        // Função para expor as funções do script.js para o teste
+        function exporFuncoes() {
+            if (typeof calcularPrimeiraParcelaSAC !== 'undefined') {
+                window.calcularPrimeiraParcelaSAC = calcularPrimeiraParcelaSAC;
+            }
+            if (typeof calcularParcelaPrice !== 'undefined') {
+                window.calcularParcelaPrice = calcularParcelaPrice;
+            }
+            if (typeof calcularPercentualRenda !== 'undefined') {
+                window.calcularPercentualRenda = calcularPercentualRenda;
+            }
+            if (typeof gerarAlertaOrcamento !== 'undefined') {
+                window.gerarAlertaOrcamento = gerarAlertaOrcamento;
+            }
+        }
+        
+        // Aguardar o script carregar
+        setTimeout(exporFuncoes, 100);
+    </script>
+</body>
+</html>

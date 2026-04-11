@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculadora de Financiamento Imobiliário</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+</head>
+<body>
+
+    <!-- Cabeçalho / Hero Section -->
+    <section class="hero">
+        <div class="container">
+            <h1>🏠 Calculadora de financiamento imobiliário</span></h1>
+            <p class="subtitle">Planeje seu financiamento com transparência. Descubra quanto você realmente paga de juros e organize suas finanças familiares.</p>
+        </div>
+    </section>
+
+    <div class="container main-container">
+        <!-- Coluna do Formulário -->
+        <div class="form-card">
+            <h2>📋 Simule seu financiamento</h2>
+            <form id="financiamentoForm">
+                <div class="form-group">
+                    <label>💰 Valor do imóvel (R$)</label>
+                    <input type="number" id="valorImovel" required step="1000" value="300000" placeholder="Ex: 300000">
+                </div>
+
+                <div class="form-group">
+                    <label>💵 Valor da entrada (R$)</label>
+                    <input type="number" id="entrada" required step="1000" value="60000" placeholder="Ex: 60000">
+                </div>
+
+                <div class="form-group">
+                    <label>📈 Taxa de juros ao ano (%)</label>
+                    <input type="number" id="taxaJuros" required step="0.1" value="9.6" placeholder="Ex: 9.6">
+                </div>
+
+                <div class="form-group">
+                    <label>⏱️ Prazo (anos)</label>
+                    <input type="number" id="prazoAnos" required step="1" value="30" placeholder="Ex: 30">
+                </div>
+
+                <div class="form-group">
+                    <label>👨‍👩‍👧‍👦 Renda familiar mensal (R$)</label>
+                    <input type="number" id="rendaFamiliar" required step="500" value="8000" placeholder="Ex: 8000">
+                </div>
+
+                <div class="form-group">
+                    <label>🏦 Tipo de financiamento</label>
+                    <div class="radio-group">
+                        <label class="radio-label">
+                            <input type="radio" name="tipo" value="SAC" checked> 
+                            <span>SAC</span>
+                            <small>(Parcelas decrescentes)</small>
+                        </label>
+                        <label class="radio-label">
+                            <input type="radio" name="tipo" value="Price"> 
+                            <span>Price</span>
+                            <small>(Parcela fixa)</small>
+                        </label>
+                    </div>
+                </div>
+
+                <button type="button" onclick="calcularFinanciamento()">🔍 Calcular financiamento</button>
+            </form>
+        </div>
+
+        <!-- Coluna de Resultados -->
+        <div class="results-card" id="resultado">
+            <div class="placeholder">
+                <span class="icon">📊</span>
+                <h3>Seus resultados aparecerão aqui</h3>
+                <p>Preencha os dados ao lado e clique em "Calcular financiamento" para visualizar a simulação completa, incluindo amortização, juros e impacto no orçamento.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Seção de Features (Inspirado no infográfico) -->
+    <section class="features">
+        <div class="container">
+            <div class="section-header">
+                <h2>Como podemos te ajudar?</h2>
+                <p>Dados claros para decisões financeiras inteligentes</p>
+            </div>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">📉</div>
+                    <h3>Amortização real</h3>
+                    <p>Veja exatamente quanto da parcela está reduzindo sua dívida e quanto está indo para juros.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🏦</div>
+                    <h3>SAC vs Price</h3>
+                    <p>Compare os dois sistemas de amortização e escolha o melhor para seu bolso.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">👨‍👩‍👧‍👦</div>
+                    <h3>Planejamento familiar</h3>
+                    <p>Descubra se a parcela cabe no seu orçamento com alertas coloridos e personalizados.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">📅</div>
+                    <h3>Tabela detalhada</h3>
+                    <p>Acompanhe as primeiras parcelas e veja a evolução do saldo devedor mês a mês.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Seção de Dados (Inspirado no gráfico) -->
+    <section class="data-section">
+        <div class="container">
+            <div class="section-header">
+                <h2>Entenda os números</h2>
+                <p>Dados que mostram o impacto real do financiamento</p>
+            </div>
+            <div class="data-grid">
+                <div class="data-card">
+                    <div class="data-number" id="dataJuros">0%</div>
+                    <p>do valor do imóvel pode virar juros</p>
+                </div>
+                <div class="data-card">
+                    <div class="data-number" id="dataComprometimento">0%</div>
+                    <p>da renda familiar comprometida</p>
+                </div>
+                <div class="data-card">
+                    <div class="data-number" id="dataPrazo">30 anos</div>
+                    <p>é o prazo médio de financiamento</p>
+                </div>
+                <div class="data-card">
+                    <div class="data-number" id="dataTotal">R$ 0</div>
+                    <p>total pago no fim do financiamento</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2026 - Calculadora de Financiamento Imobiliário</p>
+            <p>Desenvolvido para planejamento financeiro familiar | Dados aproximados - consulte um especialista</p>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>

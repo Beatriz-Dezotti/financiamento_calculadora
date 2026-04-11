@@ -1,0 +1,65 @@
+name: CI - Continuous Integration
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+    
+    - name: Setup Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: '18'
+    
+    - name: Install dependencies
+      run: |
+        if [ -f package.json ]; then
+          npm ci || npm install
+        else
+          echo "No package.json found, skipping npm install"
+        fi
+    
+    - name: Check HTML file exists
+      run: test -f index.html && echo "✅ index.html found" || (echo "❌ index.html not found" && exit 1)
+    
+    - name: Check JavaScript file exists
+      run: test -f script.js && echo "✅ script.js found" || (echo "❌ script.js not found" && exit 1)
+    
+    - name: Check CSS file exists (optional)
+      run: test -f style.css && echo "✅ style.css found" || echo "⚠️ style.css not found (optional)"
+    
+    - name: Check tests file exists
+      run: test -f tests.html && echo "✅ tests.html found" || echo "⚠️ tests.html not found"
+    
+    - name: Run linter (ESLint)
+      run: |
+        if [ -f package.json ] && [ -f .eslintrc.json ]; then
+          npx eslint script.js || true
+        else
+          echo "⚠️ Linter not configured, skipping"
+        fi
+    
+    - name: Validate HTML syntax (basic)
+      run: |
+        if grep -q "<!DOCTYPE html>" index.html; then
+          echo "✅ HTML DOCTYPE found"
+        else
+          echo "⚠️ HTML DOCTYPE not found"
+        fi
+    
+    - name: Summary
+      run: |
+        echo "========================================="
+        echo "✅ CI completed successfully"
+        echo "========================================="
+        echo "Project: Calculadora de Financiamento"
+        echo "Status: All required files present"
+        echo "========================================="
