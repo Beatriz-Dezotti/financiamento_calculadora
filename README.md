@@ -4,6 +4,16 @@
 [![Version](https://img.shields.io/badge/version-1.0.0-blue.svg)](https://github.com/seuusuario/financiamento-calculadora/releases/tag/v1.0.0)
 [![License](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
 
+## 🌐 Acesso Online
+
+A aplicação está disponível publicamente em:
+
+🔗 **[https://beatriz-dezotti.github.io/financiamento_calculadora/](https://beatriz-dezotti.github.io/financiamento_calculadora/)**
+
+A Taxa Selic é consultada em tempo real através da API oficial do Banco Central do Brasil.
+
+---
+
 ## 📌 Índice
 
 - [Sobre o Projeto](#sobre-o-projeto)
