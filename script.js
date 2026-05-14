@@ -302,3 +302,80 @@ if (typeof window !== 'undefined') {
     window.gerarTabelaParcelas = gerarTabelaParcelas;
     window.calcularFinanciamento = calcularFinanciamento;
 }
+
+// ============================================
+// CONSUMO DA API DO BANCO CENTRAL (TAXA SELIC)
+// ============================================
+
+/**
+ * Busca a Taxa Selic atual na API do Banco Central
+ * @returns {Promise<{valor: number, data: string, valorFormatado: string}|{erro: boolean, mensagem: string}>}
+ */
+async function buscarTaxaSelic() {
+    const dataAtual = new Date();
+    const anoAtual = dataAtual.getFullYear();
+    const url = `https://api.bcb.gov.br/dados/serie/bcdata.sgs.11/dados?formato=json&dataInicial=01/01/${anoAtual}&dataFinal=31/12/${anoAtual}`;
+    
+    try {
+        const response = await fetch(url);
+        
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        
+        const dados = await response.json();
+        
+        if (!dados || dados.length === 0) {
+            throw new Error('Nenhum dado retornado pela API');
+        }
+        
+        const ultimaTaxa = dados[dados.length - 1];
+        const valorSelic = parseFloat(ultimaTaxa.valor);
+        const dataSelic = ultimaTaxa.data;
+        
+        // Formatar data (DD/MM/YYYY)
+        const dataFormatada = dataSelic.split('/').reverse().join('/');
+        
+        return {
+            valor: valorSelic,
+            data: dataFormatada,
+            valorFormatado: valorSelic.toFixed(2).replace('.', ',')
+        };
+    } catch (erro) {
+        console.error('Erro ao buscar Taxa Selic:', erro);
+        return {
+            erro: true,
+            mensagem: 'Não foi possível carregar a Taxa Selic no momento.'
+        };
+    }
+}
+
+/**
+ * Exibe a Taxa Selic na interface
+ */
+async function exibirTaxaSelic() {
+    const container = document.getElementById('taxaSelicContainer');
+    
+    if (!container) return;
+    
+    container.innerHTML = '<div class="selic-loading">🔄 Carregando Taxa Selic...</div>';
+    
+    const resultado = await buscarTaxaSelic();
+    
+    if (resultado.erro) {
+        container.innerHTML = `<div class="selic-erro">⚠️ ${resultado.mensagem}</div>`;
+        return;
+    }
+    
+    container.innerHTML = `
+        <div class="selic-card">
+            <div class="selic-titulo">🏦 Taxa Selic (BCB)</div>
+            <div class="selic-valor">${resultado.valorFormatado}%</div>
+            <div class="selic-data">Atualizado em: ${resultado.data}</div>
+            <div class="selic-info">A Selic influencia diretamente as taxas de juros dos financiamentos imobiliários.</div>
+        </div>
+    `;
+}
+
+// Carregar a Taxa Selic quando a página carregar
+document.addEventListener('DOMContentLoaded', exibirTaxaSelic);
