@@ -425,3 +425,139 @@ footer p:first-child {
         padding: 0 16px;
     }
 }
+
+/* ============================================
+   TAXA SELIC - API DO BANCO CENTRAL
+   ============================================ */
+
+.selic-wrapper {
+    max-width: 1280px;
+    margin: 40px auto;
+    padding: 0 24px;
+}
+
+.selic-card {
+    background: linear-gradient(135deg, #1a4a6f 0%, #0f2b3d 100%);
+    border-radius: 24px;
+    padding: 24px 32px;
+    text-align: center;
+    color: white;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.selic-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 20px 35px rgba(0, 0, 0, 0.2);
+}
+
+.selic-titulo {
+    font-size: 14px;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    opacity: 0.8;
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+.selic-titulo::before {
+    content: "🏦";
+    font-size: 18px;
+}
+
+.selic-valor {
+    font-size: 52px;
+    font-weight: 800;
+    color: #ffd166;
+    margin: 12px 0;
+    line-height: 1;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.selic-data {
+    font-size: 13px;
+    opacity: 0.7;
+    margin-bottom: 16px;
+    letter-spacing: 0.5px;
+}
+
+.selic-info {
+    font-size: 13px;
+    background: rgba(255, 255, 255, 0.12);
+    padding: 10px 20px;
+    border-radius: 40px;
+    display: inline-block;
+    max-width: 80%;
+    line-height: 1.4;
+    backdrop-filter: blur(4px);
+}
+
+.selic-loading {
+    background: #f8fafc;
+    border-radius: 24px;
+    padding: 32px;
+    text-align: center;
+    color: #64748b;
+    font-size: 16px;
+    border: 1px solid #e2e8f0;
+}
+
+.selic-loading::before {
+    content: "🔄";
+    display: inline-block;
+    animation: girar 1s linear infinite;
+    margin-right: 10px;
+}
+
+@keyframes girar {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+.selic-erro {
+    background: #fff3cd;
+    border-radius: 24px;
+    padding: 32px;
+    text-align: center;
+    color: #856404;
+    border-left: 4px solid #ffc107;
+    font-size: 14px;
+}
+
+/* Responsividade para o card da Selic */
+@media (max-width: 768px) {
+    .selic-wrapper {
+        margin: 30px auto;
+        padding: 0 16px;
+    }
+    
+    .selic-card {
+        padding: 20px 24px;
+    }
+    
+    .selic-valor {
+        font-size: 40px;
+    }
+    
+    .selic-info {
+        font-size: 11px;
+        max-width: 95%;
+    }
+    
+    .selic-titulo {
+        font-size: 12px;
+    }
+}
+
+@media (max-width: 480px) {
+    .selic-valor {
+        font-size: 32px;
+    }
+    
+    .selic-card {
+        padding: 16px 20px;
+    }
+}
