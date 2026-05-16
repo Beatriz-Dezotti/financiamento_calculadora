@@ -208,7 +208,15 @@ cd financiamento_calculadora
 
 ✅ PASS: SAC - valor da parcela deve ser positivo
 
-📊 Resultado: 11/11 testes passaram (100%)
+✅ PASS: API do BCB - fetch disponível no navegador
+
+✅ PASS: API do BCB - dados retornados são um array válido
+
+✅ PASS: API do BCB - estrutura do dado válida (campos valor e data)
+
+✅ PASS: API do BCB - valor da Selic é numérico e positivo
+
+📊 Resultado: 15/15 testes passaram (100%)
 
 ---
 ## Linting (Análise Estática)
