@@ -104,11 +104,16 @@
             resultadosDiv.appendChild(div);
         }
         
-        function executarTestes() {
+        async function executarTestes() {
             // Limpar resultados anteriores
             resultadosDiv.innerHTML = '';
             totalTestes = 0;
             testesPassaram = 0;
+
+            // Criar um container para o resumo que será atualizado depois
+            const resumoContainer = document.createElement('div');
+            resumoContainer.id = 'resumoContainer';
+            resultadosDiv.appendChild(resumoContainer);
             
             // Verificar se as funções existem
             const funcoes = [
@@ -163,13 +168,139 @@
                 const sacNegativo = calcularPrimeiraParcelaSAC(100000, 0.008, 360);
                 assert(sacNegativo > 0, 'SAC - valor da parcela deve ser positivo', `Obtido: R$ ${sacNegativo.toFixed(2)}`);
             }
+
+                        
+            // ============================================
+            // TESTES DE INTEGRAÇÃO - API DO BANCO CENTRAL
+            // ============================================
             
-            // Exibir resumo
-            const resumo = document.createElement('div');
-            const percentual = (testesPassaram / totalTestes) * 100;
-            resumo.className = `resumo ${percentual === 100 ? 'sucesso' : 'erro'}`;
-            resumo.innerHTML = `📊 Resultado: ${testesPassaram}/${totalTestes} testes passaram (${percentual.toFixed(0)}%)`;
-            resultadosDiv.appendChild(resumo);
+            // Teste 8: API do BCB - verificar se fetch está disponível
+            if (typeof fetch !== 'undefined') {
+                assert(true, 'API do BCB - fetch disponível no navegador', '');
+            } else {
+                assert(false, 'API do BCB - fetch disponível no navegador', 'A API fetch não está disponível');
+            }
+            
+            // Teste 9: API do BCB - requisição HTTP bem-sucedida (usando async)
+            // Este teste precisa ser assíncrono, então usamos uma Promise
+            if (typeof fetch !== 'undefined') {
+                const urlTeste = 'https://api.bcb.gov.br/dados/serie/bcdata.sgs.11/dados?formato=json&dataInicial=01/01/2025&dataFinal=31/12/2025';
+                
+                // Criar um teste assíncrono manualmente
+                let testeCompleto = false;
+                let testePassou = false;
+                let mensagemErro = '';
+                
+                fetch(urlTeste)
+                    .then(response => {
+                        if (response.ok) {
+                            return response.json();
+                        } else {
+                            throw new Error(`HTTP ${response.status}`);
+                        }
+                    })
+                    .then(dados => {
+                        // Teste 9: Verificar se os dados são um array não vazio
+                        const isArray = Array.isArray(dados);
+                        const notEmpty = dados.length > 0;
+                        const passou = isArray && notEmpty;
+                        
+                        if (passou) {
+                            testesPassaram++;
+                            adicionarResultado('pass', 'API do BCB - dados retornados são um array válido', '');
+                        } else {
+                            adicionarResultado('fail', 'API do BCB - dados retornados são um array válido', 
+                                `É array: ${isArray}, Tamanho: ${dados.length}`);
+                        }
+                        totalTestes++;
+                        testeCompleto = true;
+                        
+                        // Teste 10: Verificar estrutura do dado (campos valor e data)
+                        if (dados && dados.length > 0) {
+                            const ultimoItem = dados[dados.length - 1];
+                            const temValor = ultimoItem.hasOwnProperty('valor');
+                            const temData = ultimoItem.hasOwnProperty('data');
+                            const passouEstrutura = temValor && temData;
+                            
+                            if (passouEstrutura) {
+                                testesPassaram++;
+                                adicionarResultado('pass', 'API do BCB - estrutura do dado válida (campos valor e data)', '');
+                            } else {
+                                adicionarResultado('fail', 'API do BCB - estrutura do dado válida', 
+                                    `Tem valor: ${temValor}, Tem data: ${temData}`);
+                            }
+                            totalTestes++;
+                            
+                            // Teste 11: Valor da Selic é numérico e positivo
+                            const valor = parseFloat(ultimoItem.valor);
+                            const valorValido = !isNaN(valor) && valor > 0;
+                            
+                            if (valorValido) {
+                                testesPassaram++;
+                                adicionarResultado('pass', 'API do BCB - valor da Selic é numérico e positivo', 
+                                    `Valor: ${ultimoItem.valor}%`);
+                            } else {
+                                adicionarResultado('fail', 'API do BCB - valor da Selic é numérico e positivo', 
+                                    `Valor obtido: ${ultimoItem.valor}`);
+                            }
+                            totalTestes++;
+                        }
+                        
+                        // Atualizar resumo se todos os testes assíncronos terminaram
+                        atualizarResumoFinal();
+                    })
+                    .catch(erro => {
+                        adicionarResultado('fail', 'API do BCB - comunicação com a API', `Erro: ${erro.message}`);
+                        totalTestes++;
+                        atualizarResumoFinal();
+                    });
+                
+                // Função auxiliar para adicionar resultado
+                function adicionarResultado(tipo, nomeTeste, detalhes) {
+                    const div = document.createElement('div');
+                    div.className = 'test';
+                    if (tipo === 'pass') {
+                        div.classList.add('pass');
+                        div.innerHTML = `<span class="pass-text">✅ PASS:</span> ${nomeTeste}`;
+                    } else {
+                        div.classList.add('fail');
+                        div.innerHTML = `<span class="fail-text">❌ FAIL:</span> ${nomeTeste}`;
+                        if (detalhes) {
+                            div.innerHTML += `<br><small style="color:#666;">${detalhes}</small>`;
+                        }
+                    }
+                    resultadosDiv.appendChild(div);
+                }
+                
+                // Função para atualizar o resumo final (será chamada depois que todos os testes assíncronos terminarem)
+                let testesAssincronosConcluidos = false;
+                function atualizarResumoFinal() {
+                    if (testesAssincronosConcluidos) return;
+                    testesAssincronosConcluidos = true;
+
+                    // Atualizar o resumo no container
+                    const resumoContainer = document.getElementById('resumoContainer');
+                    if (resumoContainer) {
+                        const percentual = (testesPassaram / totalTestes) * 100;
+                        resumoContainer.innerHTML = `
+                            <div class="resumo ${percentual === 100 ? 'sucesso' : 'erro'}">
+                                📊 Resultado: ${testesPassaram}/${totalTestes} testes passaram (${percentual.toFixed(0)}%)
+                            </div>
+                        `;
+                    }
+                }
+                    
+                
+                // Marcar que os testes assíncronos começaram
+                setTimeout(() => {
+                    if (!testesAssincronosConcluidos) {
+                        atualizarResumoFinal();
+                    }
+                }, 5000); // Timeout de 5 segundos para evitar que fique travado
+            } else {
+                assert(false, 'API do BCB - fetch disponível', 'O navegador não suporta a API fetch');
+            }
+            
         }
         
         // Função para expor as funções do script.js para o teste
